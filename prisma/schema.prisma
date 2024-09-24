@@ -1,0 +1,119 @@
+// This is your Prisma schema file,
+// learn more about it in the docs: https://pris.ly/d/prisma-schema
+
+// Looking for ways to speed up your queries, or scale easily with your serverless or edge functions?
+// Try Prisma Accelerate: https://pris.ly/cli/accelerate-init
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+model User {
+  id               Int      @id @default(autoincrement())
+  email            String   @unique
+  password         String
+  isSoocialLogin   Boolean? @default(false)
+  username         String?  @unique
+  name             String?
+  description      String?
+  avatar           String?
+  isProfileInfoSet Boolean? @default(false)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  gigs Gig[]
+  orders Order[]
+  reviews Review[]
+
+  messageSent Message[] @relation("sentMessages")
+  messageReceived Message[] @relation("receivedMessages")
+
+  @@map("users")
+}
+
+model Gig {
+  id          Int      @id @default(autoincrement())
+  title       String
+  description String
+  price       Float
+  image       String
+  revisions   Int
+  features    String[]
+
+  category          String
+  delivery_time     String
+  short_description String
+  images            String[]
+
+  user_id Int
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  user    User @relation(fields: [user_id], references: [id])
+  orders  Order[]
+  reviews Review[]
+
+
+  @@map("gigs")
+}
+
+model Order{
+  id Int @id @default(autoincrement())
+  gig_id Int
+  user_id Int
+  status String
+  price Float
+  payment_intent String @unique
+  isCompleted Boolean @default(false)
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+
+  gig Gig @relation(fields: [gig_id], references: [id])
+  buyer User @relation(fields: [user_id], references: [id])
+  reviews Review[]
+  messages Message[]
+  @@map("orders")
+}
+
+model Review{
+  id Int @id @default(autoincrement())
+  order_id Int
+  rating Int
+  review String
+  user_id Int
+  gig_id Int
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  reviewer User @relation(fields: [user_id], references: [id])
+  gig Gig @relation(fields: [gig_id], references: [id])
+  order Order @relation(fields: [order_id], references: [id])
+  @@map("reviews")
+}
+
+
+model Message{
+  id Int @unique @default(autoincrement())
+  sender_id Int
+  received_id Int 
+  text String
+  order_id Int
+
+  created_at DateTime @default(now())
+  updated_at DateTime @updatedAt
+
+  sender User @relation("sentMessages",fields: [sender_id], references: [id])
+  receiver User @relation("receivedMessages",fields: [received_id], references: [id])
+  order Order @relation(fields: [order_id], references: [id])
+
+  @@map("messages")
+}
