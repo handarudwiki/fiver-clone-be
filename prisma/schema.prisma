@@ -42,14 +42,13 @@ model Gig {
   title       String
   description String
   price       Float
-  image       String
+  images            String[]
   revisions   Int
   features    String[]
 
   category          String
-  delivery_time     String
+  delivery_time     Int
   short_description String
-  images            String[]
 
   user_id Int
 
@@ -117,3 +116,46 @@ model Message{
 
   @@map("messages")
 }
+
+// model LogbookSosialisasi{
+//   id Int @id @default(autoincrement())
+//   province String
+//   city String
+//   topic String
+//   description String
+//   cretaed_at DateTime @default(now())
+//   updated_at DateTime @updatedAt
+
+//   loogbookImages LogbookImage[]
+//   @@map("logbook_sosialisasi")
+// }
+
+// model LogbookMonitoringDebitur{
+//   id Int @id @default(autoincrement())
+//   finance_condition String
+//   business_condition String
+//   guarantor String
+//   control String
+//   payment_constraints String
+//   conclusion String
+
+//   created_at DateTime @default(now())
+//   updated_at DateTime @updatedAt
+
+//   loogbookImages LogbookImage[]
+//   @@map("logbook_monitoring_debitur")
+// }
+
+// model LogbookImage {
+//   id Int @id @default(autoincrement())
+//   logbookSosialisasiId Int?  
+//   logbookMonitoringDebiturId Int?  
+//   image String
+//   created_at DateTime @default(now())
+//   updated_at DateTime @updatedAt
+
+//   LogbookSosialisasi LogbookSosialisasi? @relation(fields: [logbookSosialisasiId], references: [id])
+//   LogbookMonitoringDebitur LogbookMonitoringDebitur? @relation(fields: [logbookMonitoringDebiturId], references: [id])
+
+//   @@map("logbook_images")
+// }

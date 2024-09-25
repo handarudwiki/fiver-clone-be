@@ -3,6 +3,7 @@ import dotenv from 'dotenv';
 import cors from 'cors';
 import fileupload from 'express-fileupload';
 import userRouter from './routes/UserRoute';
+import gigRouter from './routes/GigRoute';
 
 dotenv.config();
 const app = express();
@@ -15,6 +16,7 @@ app.use(express.urlencoded({extended:true}));
 app.use(fileupload());
 
 app.use('/api/v1/users', userRouter);
+app.use('/api/v1/gigs', gigRouter);
 
 
 app.listen(port, ()=>{

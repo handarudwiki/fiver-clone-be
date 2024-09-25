@@ -67,6 +67,7 @@ class UserService{
     }
 
     static async update(id:number, dto:UpdateUserInput):Promise<userResponse>{
+        const updateRequest = Validation.validate(UserValidation.updateUser, dto);
         const user = await prisma.user.findUnique({
             where:{
                 id
